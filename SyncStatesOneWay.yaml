@@ -1,0 +1,51 @@
+# 
+# Home Assistant Automation Blueprint
+#
+# Synchronize on/off states on two devices as master slave
+#
+# Revision 1.4 - Added condition to handle unavailable states
+# Modified by Johan Schelin, Apr. 2021
+#
+
+blueprint:
+  name: Synchronize Two States Master
+  description: Bind two entities together to act as master and slave. Only master can turn on but both can turn off.
+  domain: automation
+  input:
+    switch_1:
+      name: Master entity
+      description: Mandatory - The first entity to keep in sync.
+      selector:
+        entity: {}
+    switch_2:
+      name: Slave entity
+      description: Mandatory - The second entity to keep in sync.
+      selector:
+        entity: {}
+  source_url: https://github.com/ruddj/ha_blueprints/blob/main/SyncStatesTwo.yaml
+mode: restart
+max_exceeded: silent
+variables:
+  switch_1: !input 'switch_1'
+  switch_2: !input 'switch_2'
+trigger:
+- platform: state
+  entity_id: 
+    - !input 'switch_1'
+  from:
+    - 'on'
+    - 'off'
+- platform: state
+  entity_id: 
+    - !input 'switch_2'
+  from:
+    - 'on'   
+condition:
+- condition: template
+  value_template: '{{ states(switch_1) != ''unavailable'' }}'
+- condition: template
+  value_template: '{{ states(switch_2) != ''unavailable'' }}'
+action:
+- service: homeassistant.turn_{{ trigger.to_state.state }}
+  data:
+    entity_id: '{% if trigger.from_state.entity_id == switch_1 %} {{ switch_2 }} {% else %} {{ switch_1 }} {% endif %}'
