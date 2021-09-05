@@ -1,0 +1,93 @@
+# 
+# Home Assistant Automation Blueprint
+#
+# Synchronize on/off states on six devices
+#
+# Revision 1.4 - Expanded to 6 states
+# Modified by James Rudd, Sept. 2021
+# Based on code by Johan Schelin, Apr. 2021
+#
+
+blueprint:
+  name: Synchronize Six States
+  description: Bind Six entities together to act in unison (selected entites must
+    all support the same state values). In this version restricted to on/off
+  domain: automation
+  input:
+    switch_1:
+      name: Entity 1
+      selector:
+        entity: {}
+    switch_2:
+      name: Entity 2
+      selector:
+        entity: {}
+    switch_3:
+      name: Entity 3
+      default:
+      selector:
+        entity: {}
+    switch_4:
+      name: Entity 4
+      default:
+      selector:
+        entity: {}
+    switch_5:
+      name: Entity 5
+      default:
+      selector:
+        entity: {}
+    switch_6:
+      name: Entity 6
+      default:
+      selector:
+        entity: {}        
+  source_url: https://github.com/ruddj/ha_blueprints/blob/main/SyncStatesSix.yaml
+mode: single
+max_exceeded: silent
+variables:
+  switch_1: !input 'switch_1'
+  switch_2: !input 'switch_2'
+  switch_3: !input 'switch_3'
+  switch_4: !input 'switch_4'
+  switch_5: !input 'switch_5'
+  switch_6: !input 'switch_6'
+trigger:
+- platform: state
+  entity_id: 
+    - !input 'switch_1'
+    - !input 'switch_2'
+    - !input 'switch_3'
+    - !input 'switch_4'
+    - !input 'switch_5'
+    - !input 'switch_6'    
+  from:
+    - 'on'
+    - 'off'
+condition:
+- condition: template
+  value_template: '{{ states(switch_1) != ''unavailable'' }}'
+- condition: template
+  value_template: '{{ states(switch_2) != ''unavailable'' }}'
+- condition: template
+  value_template: '{{ states(switch_3) != ''unavailable'' }}'
+- condition: template
+  value_template: '{{ states(switch_4) != ''unavailable'' }}'
+- condition: template
+  value_template: '{{ states(switch_5) != ''unavailable'' }}'
+- condition: template
+  value_template: '{{ states(switch_6) != ''unavailable'' }}'
+action:
+- entity_id: 
+  - !input 'switch_1'
+  - !input 'switch_2'
+  - !input 'switch_3'
+  - !input 'switch_4'
+  - !input 'switch_5'
+  - !input 'switch_6' 
+- service: homeassistant.turn_{{ trigger.to_state.state }}
+- delay:
+    hours: 0
+    minutes: 0
+    seconds: 0
+    milliseconds: 200
