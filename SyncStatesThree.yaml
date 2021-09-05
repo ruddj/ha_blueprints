@@ -28,8 +28,8 @@ blueprint:
       description: Mandatory - The third entity to keep in sync.
       selector:
         entity: {}
-  source_url: https://github.com/johanschelin/ha_blueprints/blob/main/SyncStatesThree.yml
-mode: restart
+  source_url: https://github.com/ruddj/ha_blueprints/blob/main/SyncStatesThree.yaml
+mode: single
 max_exceeded: silent
 variables:
   switch_1: !input 'switch_1'
@@ -58,3 +58,9 @@ action:
 - service: homeassistant.turn_{{ trigger.to_state.state }}
   data:
     entity_id: '{% if trigger.from_state.entity_id == switch_1 %} {{ switch_3 }} {% elif trigger.from_state.entity_id == switch_2 %} {{ switch_3 }} {% else %} {{ switch_2 }} {% endif %}'
+- delay:
+    hours: 0
+    minutes: 0
+    seconds: 0
+    milliseconds: 50
+

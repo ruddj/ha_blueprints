@@ -31,7 +31,7 @@ blueprint:
       default:
       selector:
         entity: {}
-  source_url: https://github.com/johanschelin/ha_blueprints/blob/main/SyncStatesFour.yml
+  source_url: https://github.com/ruddj/ha_blueprints/blob/main/SyncStatesFour.yaml
 mode: single
 max_exceeded: silent
 variables:
@@ -71,5 +71,5 @@ action:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 5
-      milliseconds: 0
+      seconds: 0
+      milliseconds: 200
