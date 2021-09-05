@@ -85,7 +85,7 @@ action:
   - !input 'switch_4'
   - !input 'switch_5'
   - !input 'switch_6' 
-- service: homeassistant.turn_{{ trigger.to_state.state }}
+  service: homeassistant.turn_{{ trigger.to_state.state }}
 - delay:
     hours: 0
     minutes: 0
